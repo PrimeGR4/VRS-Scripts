@@ -1,0 +1,13 @@
+local tool = Instance.new("Tool")
+tool.Name = "Destroy Tool"
+tool.RequiresHandle = false
+
+local mouse = game.Players.LocalPlayer:GetMouse()
+
+tool.Activated:Connect(function()
+    if mouse.Target then
+        mouse.Target:Destroy()
+    end
+end)
+
+tool.Parent = game.Players.LocalPlayer.Backpack
