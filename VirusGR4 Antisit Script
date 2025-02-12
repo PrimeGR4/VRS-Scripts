@@ -1,0 +1,39 @@
+local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+-- إرسال إشعار عند تشغيل السكربت
+StarterGui:SetCore("SendNotification", {
+    Title = "حماية",
+    Text = "VRS Antisit",
+    Duration = 5
+})
+
+local function preventSitting(character)
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        -- عند أي محاولة للجلوس يتم إيقاف اللاعب فورًا
+        humanoid:GetPropertyChangedSignal("Sit"):Connect(function()
+            if humanoid.Sit then
+                task.wait() -- انتظار لحظة قصيرة جدًا لمنع أي مشاكل
+                humanoid.Sit = false
+                humanoid.Jump = true -- إجبار اللاعب على النهوض فورًا
+            end
+        end)
+
+        -- تحديث مستمر لمنع الجلوس نهائيًا
+        RunService.Heartbeat:Connect(function()
+            if humanoid.Sit then
+                humanoid.Sit = false
+                humanoid.Jump = true
+            end
+        end)
+    end
+end
+
+LocalPlayer.CharacterAdded:Connect(preventSitting)
+
+if LocalPlayer.Character then
+    preventSitting(LocalPlayer.Character)
+end
